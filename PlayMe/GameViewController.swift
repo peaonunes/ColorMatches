@@ -17,6 +17,7 @@ class GameViewController: UIViewController {
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var errorView: UIView!
+    @IBOutlet weak var countdownLabel: UILabel!
     
     var modelsManager = ModelsManager.sharedInstance
     var model : Account!
@@ -30,6 +31,10 @@ class GameViewController: UIViewController {
     var timeLimite : Int = 45
     var counter = 0
     var timer = NSTimer()
+    
+    var countdownToStartTimer = NSTimer()
+    
+    var countdownToStart : Int = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,18 +94,29 @@ class GameViewController: UIViewController {
             action in
             self.chooseColor(0)
             self.colorView.backgroundColor = self.lastColor
-            _ = NSTimer.scheduledTimerWithTimeInterval(4.0, target: self, selector: #selector(GameViewController.firstUpdate), userInfo: nil, repeats: false)
+            self.countdownToStartTimer = NSTimer.scheduledTimerWithTimeInterval(0.7, target: self, selector: #selector(GameViewController.updateCountdownLabel), userInfo: nil, repeats: true)
+            _ = NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: #selector(GameViewController.firstUpdate), userInfo: nil, repeats: false)
         }))
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
+    func updateCountdownLabel(){
+        if (self.countdownToStart > 0){
+            self.countdownLabel.text = "\(countdownToStart)"
+            self.countdownToStart -= 1
+        } else {
+            self.countdownLabel.hidden = true
+            self.countdownToStartTimer.invalidate()
+        }
+    }
+    
     func timerAction(){
-        counter += 1
+        self.counter += 1
         let time = (timeLimite-counter)
         if((time) < 0){
             gameOver()
         } else {
-            timeLabel.text = "\(time)"
+            self.timeLabel.text = "\(time)"
         }
     }
     
@@ -123,9 +139,12 @@ class GameViewController: UIViewController {
     }
     
     func firstUpdate(){
+        timeLabel.hidden = false
         questionLabel.hidden = false
         yesButton.enabled = true
+        yesButton.hidden = false
         noButton.enabled = true
+        noButton.hidden = false
         changeColor()
         gameLoop()
     }
