@@ -202,7 +202,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rq0-IG-Avd">
                                         <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="100"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.46388620139999998" green="0.46389764550000001" blue="0.46389150620000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -246,7 +246,7 @@
                                 <rect key="frame" x="15" y="505" width="600" height="600"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="613" width="400" height="800"/>
+                                    <rect key="frame" x="-77" y="664" width="400" height="800"/>
                                 </variation>
                             </view>
                         </subviews>
@@ -272,7 +272,7 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="30"/>
                             </constraint>
                             <constraint firstItem="1ik-cY-jqE" firstAttribute="top" secondItem="Lqr-Yh-ZPj" secondAttribute="bottom" constant="30" id="W9E-mD-nIk"/>
-                            <constraint firstItem="kpZ-6n-xlL" firstAttribute="leading" secondItem="o43-kC-V3G" secondAttribute="leadingMargin" constant="90" id="WNA-Cy-lbg">
+                            <constraint firstItem="kpZ-6n-xlL" firstAttribute="leading" secondItem="o43-kC-V3G" secondAttribute="leadingMargin" constant="92" id="WNA-Cy-lbg">
                                 <variation key="heightClass=regular-widthClass=compact" constant="90"/>
                             </constraint>
                             <constraint firstItem="kpZ-6n-xlL" firstAttribute="leading" secondItem="o43-kC-V3G" secondAttribute="leadingMargin" constant="205" id="XOY-7H-efu"/>

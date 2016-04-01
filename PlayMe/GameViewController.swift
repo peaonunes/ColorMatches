@@ -21,66 +21,16 @@ class GameViewController: UIViewController {
     
     var modelsManager = ModelsManager.sharedInstance
     var model : Account!
+    var gameModel : GameModel!
     
-    var colors : [UIColor] = [UIColor.redColor(), UIColor.greenColor(), UIColor.blueColor()]
-    
-    var lastColor : UIColor!
-    var currentColor : UIColor!
-    var score = 0
-    
-    var timeLimite : Int = 45
-    var counter = 0
-    var timer = NSTimer()
-    
+    var clockTimer = NSTimer()
     var countdownToStartTimer = NSTimer()
-    
-    var countdownToStart : Int = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.model = Account()
+        self.gameModel = GameModel(gameTimeLimit: 45, numberOfColors: 3)
         loadData()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        startGame()
-    }
-    
-    @IBAction func yesAction(sender: AnyObject) {
-        computeAnswer(true)
-    }
-    
-    @IBAction func noAction(sender: AnyObject) {
-        computeAnswer(false)
-    }
-    
-    func computeAnswer(answer : Bool){
-        if (answer == isMatch()) {
-            score += 1
-        } else {
-            score -= 1
-            errorView.hidden = false
-            _ = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: #selector(GameViewController.indicateError), userInfo: nil, repeats: false)
-        }
-        updateLabel()
-        changeColor()
-    }
-    
-    func indicateError(){
-        errorView.hidden = true
-    }
-    
-    func isMatch() -> Bool {
-        if (lastColor == currentColor){
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    func updateLabel() {
-        self.scoreLabel.text = String(format: "Score: %d", score)
     }
     
     func loadData(){
@@ -88,81 +38,87 @@ class GameViewController: UIViewController {
         self.model.bestScore = modelsManager.getAccountModel().bestScore
     }
     
-    func startGame(){
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        prepareGame()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func yesAction(sender: AnyObject) {
+        verifyAnswer(true)
+    }
+    
+    @IBAction func noAction(sender: AnyObject) {
+        verifyAnswer(false)
+    }
+    
+    func prepareGame(){
         let alert = UIAlertController(title: "Get ready!", message: "Pay attetion to the first color!", preferredStyle: UIAlertControllerStyle.Alert)
+       
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: {
             action in
-            self.chooseColor(0)
-            self.colorView.backgroundColor = self.lastColor
+            self.updateState(0)
+           
             self.countdownToStartTimer = NSTimer.scheduledTimerWithTimeInterval(0.7, target: self, selector: #selector(GameViewController.updateCountdownLabel), userInfo: nil, repeats: true)
-            _ = NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: #selector(GameViewController.firstUpdate), userInfo: nil, repeats: false)
+            
+            _ = NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: #selector(GameViewController.startGame), userInfo: nil, repeats: false)
         }))
+        
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func updateCountdownLabel(){
-        if (self.countdownToStart > 0){
-            self.countdownLabel.text = "\(countdownToStart)"
-            self.countdownToStart -= 1
+        if (self.gameModel.countdownToStart > 0){
+            self.countdownLabel.text = "\(self.gameModel.countdownToStart)"
+            self.gameModel.countdownToStart -= 1
         } else {
             self.countdownLabel.hidden = true
             self.countdownToStartTimer.invalidate()
         }
     }
-    
-    func timerAction(){
-        self.counter += 1
-        let time = (timeLimite-counter)
-        if((time) < 0){
-            gameOver()
-        } else {
-            self.timeLabel.text = "\(time)"
-        }
-    }
-    
-    func chooseColor(color : Int){
-        let random = Int(arc4random_uniform(3))
-        if (color == 0) {
-            lastColor = colors[random]
-            currentColor = colors[random]
-        } else if (color == 1){
-            lastColor = colors[random]
-        } else {
-            currentColor = colors[random]
-        }
-    }
-    
-    func changeColor(){
-        lastColor = currentColor
-        chooseColor(2)
-        self.colorView.backgroundColor = currentColor
-    }
-    
-    func firstUpdate(){
-        timeLabel.hidden = false
-        questionLabel.hidden = false
-        yesButton.enabled = true
-        yesButton.hidden = false
-        noButton.enabled = true
-        noButton.hidden = false
-        changeColor()
-        gameLoop()
+
+    func startGame(){
+        self.timeLabel.hidden = false
+        self.questionLabel.hidden = false
+        
+        self.yesButton.enabled = true
+        self.yesButton.hidden = false
+        
+        self.noButton.enabled = true
+        self.noButton.hidden = false
+       
+        self.updateState(2)
+        
+        self.gameLoop()
     }
     
     func gameLoop(){
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.9, target: self, selector: #selector(GameViewController.timerAction), userInfo: nil, repeats: true)
+        self.clockTimer = NSTimer.scheduledTimerWithTimeInterval(0.9, target: self, selector: #selector(GameViewController.checkCountdown), userInfo: nil, repeats: true)
     }
     
-    func clearView(){
-        score = 0
+    func checkCountdown(){
+        self.gameModel.timeCounter += 1
+        let actualTime = (self.gameModel.gameTimeLimit-self.gameModel.timeCounter)
+        
+        if(actualTime < 0){
+            self.gameOver()
+        } else {
+            self.timeLabel.text = "\(actualTime)"
+        }
     }
     
     func gameOver(){
-        timer.invalidate()
-        if(isBestScore()){
+        self.clockTimer.invalidate()
+        
+        if(self.isBestScore()){
             self.modelsManager.updateAccountModelAndSavePreferences(self.model)
+            
             let alert = UIAlertController(title: "Best Score!", message: "Congrats! You have a new best score!", preferredStyle: UIAlertControllerStyle.Alert)
-
+            
             alert.addAction(UIAlertAction(title: "Thanks!", style: UIAlertActionStyle.Cancel, handler: {
                 action in
                 self.navigationController?.popViewControllerAnimated(true)
@@ -182,15 +138,48 @@ class GameViewController: UIViewController {
     }
     
     func isBestScore() -> Bool{
-        if (modelsManager.getAccountModel().bestScore < score){
-            model.bestScore = score
+        if (modelsManager.getAccountModel().bestScore < self.gameModel.gameScore){
+            model.bestScore = self.gameModel.gameScore
             return true
         }
         return false
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func changeColor(whichColor: Int){
+        self.colorView.backgroundColor = self.gameModel.changeColor(whichColor)
     }
+
+    func verifyAnswer(answer : Bool){
+        
+        if (answer == self.gameModel.isMatch()) {
+            self.gameModel.gameScore += 1
+        } else {
+            
+            self.gameModel.gameScore -= 1
+            
+            self.errorView.hidden = false
+            _ = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: #selector(GameViewController.hideErrorView), userInfo: nil, repeats: false)
+        }
+
+        self.updateState(2)
+    }
+    
+    func hideErrorView(){
+         self.errorView.hidden = true
+    }
+    
+    func updateState(whichColor: Int) {
+        self.scoreLabel.text = String(format: "Score: %d", self.gameModel.gameScore)
+        self.changeColor(whichColor)
+        
+        UIView.animateWithDuration(0.1, animations: { () -> Void in
+            self.colorView.transform = CGAffineTransformMakeScale(0.95, 0.95)
+        })
+        { (finished: Bool) -> Void in
+            UIView.animateWithDuration(0.1, animations: { () -> Void in
+                self.colorView.transform = CGAffineTransformIdentity
+            })
+        }
+    }
+
 }

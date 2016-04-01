@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		012746AB1CAE0E06009E6B7E /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012746AA1CAE0E06009E6B7E /* GameModel.swift */; };
 		01DEFA471CA22B120067334D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01DEFA461CA22B120067334D /* AppDelegate.swift */; };
 		01DEFA4C1CA22B120067334D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01DEFA4A1CA22B120067334D /* Main.storyboard */; };
 		01DEFA4E1CA22B120067334D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01DEFA4D1CA22B120067334D /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		012746AA1CAE0E06009E6B7E /* GameModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
 		01DEFA431CA22B120067334D /* ColorMatches.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorMatches.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01DEFA461CA22B120067334D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		01DEFA4B1CA22B120067334D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				01DEFA581CA237400067334D /* StartViewController.swift */,
 				01DEFA5A1CA237610067334D /* MenuViewController.swift */,
 				01DEFA5C1CA2376B0067334D /* GameViewController.swift */,
+				012746AA1CAE0E06009E6B7E /* GameModel.swift */,
 				01DEFA4D1CA22B120067334D /* Assets.xcassets */,
 				01DEFA4F1CA22B120067334D /* LaunchScreen.storyboard */,
 				01DEFA521CA22B120067334D /* Info.plist */,
@@ -155,6 +158,7 @@
 				01DEFA471CA22B120067334D /* AppDelegate.swift in Sources */,
 				01DEFA591CA237400067334D /* StartViewController.swift in Sources */,
 				01DEFA611CA243450067334D /* PreferencesModel.swift in Sources */,
+				012746AB1CAE0E06009E6B7E /* GameModel.swift in Sources */,
 				01DEFA631CA244660067334D /* ModelsManager.swift in Sources */,
 				01DEFA5B1CA237610067334D /* MenuViewController.swift in Sources */,
 			);
